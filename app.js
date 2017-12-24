@@ -18,9 +18,12 @@ app.set('view engine', 'html');
 //在开发过程中，需要取消模板缓存
 swig.setDefaults({cache: false});
 
-//get index.html page
-app.get("/",function(req,res){
-	 res.render('index')
-})
 
-app.listen(8085);
+/*
+*根据不同的功能划分模块
+*/
+app.use('/admin', require('./routers/admin'));
+app.use('/api', require('./routers/api'));
+app.use('/', require('./routers/main'));
+
+app.listen(8086);
