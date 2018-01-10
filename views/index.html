@@ -6,8 +6,33 @@
 	<link rel="stylesheet" href="/public/css/index.css">
 </head>
 <body>
-	<div>
-		this is a page this node set success please set other 
-	</div>
+<!--  <form action="http://127.0.0.1:8096/process_get" method="GET"> -->
+ <form novalidate class='regForm'> 
+	UserName: 
+	<input type="text" name="username"><br>
+	PassWord: 
+	<input type="passWord" name="password">
+	<input type="submit" value="Submit" id='submit'>
+ </form>
+ <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
+ <script>
+ 	//前端使用jquery的ajax的方式进行提价数据
+ 	$(function(){
+ 		$("#submit").click(function(e){
+ 			e.preventDefault();
+ 			$.ajax({
+ 				type:'get',
+ 				url:'http://127.0.0.1:8096/process_get',
+ 				data:{'username':$("input[name='username']").val(),'password':$("input[name='password']").val()},
+ 				success:function(data){
+ 					if(data.code == 1){
+ 						 alert(data.mes);
+ 					}
+ 				}
+
+ 			})
+ 		})
+ 	})
+ </script>
 </body>
 </html>
