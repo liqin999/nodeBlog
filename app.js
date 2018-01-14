@@ -5,6 +5,9 @@ var express = require("express");
 var swig = require("swig");
 var app = express();
 
+/*加载数据库模块*/
+var mongoose = require('mongoose');
+
 //设置静态文件托管
 //当用户访问的url以/public开始，那么直接返回对应__dirname + '/public'下的文件
 app.use( '/public', express.static( __dirname + '/public') );
@@ -22,8 +25,31 @@ swig.setDefaults({cache: false});
 /*
 *根据不同的功能划分模块
 */
+/*
+app.get('/',function(req,res){
+	res.render('index')
+})*/
+
+
 app.use('/admin', require('./routers/admin'));
 app.use('/api', require('./routers/api'));
 app.use('/', require('./routers/main'));
 
-app.listen(8086);
+
+app.use('/users', function (req, res, next) {
+ res.send('USER');
+  next();
+});
+
+//使用mongoose 链接数据库  blog是数据库的名字
+mongoose.connect('mongodb://localhost:27018/blog',function(err){
+	if(err){
+		console.log('数据库连接失败')
+	}else{
+		console.log('数据库连接成功');
+		//监听http请求 数据库连接成功的时候启动应用
+		app.listen(8089);
+
+	}
+});
+

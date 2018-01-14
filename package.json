@@ -13,6 +13,7 @@
     "cookies": "^0.6.1",
     "express": "^4.14.0",
     "markdown": "^0.5.0",
+    "mongodb": "^3.0.1",
     "mongoose": "^4.5.7",
     "swig": "^1.4.2"
   }
