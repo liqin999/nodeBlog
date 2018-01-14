@@ -8,6 +8,16 @@ var app = express();
 /*加载数据库模块*/
 var mongoose = require('mongoose');
 
+//加载bodyParser 用来处理post提交的数据	
+var bodyParser = require('body-parser');
+
+// 创建 application/x-www-form-urlencoded 编码解析usersSchema
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+//bodyParser设置
+app.use(urlencodedParser)
+
+
 //设置静态文件托管
 //当用户访问的url以/public开始，那么直接返回对应__dirname + '/public'下的文件
 app.use( '/public', express.static( __dirname + '/public') );
@@ -21,10 +31,6 @@ app.set('view engine', 'html');
 //在开发过程中，需要取消模板缓存
 swig.setDefaults({cache: false});
 
-
-/*
-*根据不同的功能划分模块
-*/
 /*
 app.get('/',function(req,res){
 	res.render('index')
@@ -35,11 +41,6 @@ app.use('/admin', require('./routers/admin'));
 app.use('/api', require('./routers/api'));
 app.use('/', require('./routers/main'));
 
-
-app.use('/users', function (req, res, next) {
- res.send('USER');
-  next();
-});
 
 //使用mongoose 链接数据库  blog是数据库的名字
 mongoose.connect('mongodb://localhost:27018/blog',function(err){
