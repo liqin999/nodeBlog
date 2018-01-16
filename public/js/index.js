@@ -3,6 +3,7 @@ $(function(){
 	var $loginBox = $("#loginBox");
     var $registerBox = $("#registerBox");
 	var $userInfo = $("#userInfo");
+    var $logoutBtn = $("#logoutBtn");
 	//切换到注册页面
 	$loginBox.find('a.colMint').on("click",function(){
 		$registerBox.show();
@@ -32,6 +33,12 @@ $(function(){
                  $registerBox.find(".colWarning").html(result.message);
                  if(result.code == 0){
                        alert('注册成功');
+                       //注册成功之后，跳转到登录页面
+                       window.setTimeout(function () {
+                          $registerBox.hide();
+                          $loginBox.show();
+                       },1000)
+                       
                  }
     		}
 
@@ -49,12 +56,11 @@ $(function(){
                     password: $loginBox.find("[name='password']").val()
                 },
                 success:function(result){
-                    console.log(result);
+                    //显示登录信息
+                    $loginBox.find(".colWarning").html(result.message);
                     if(result.code == 2){
-                         alert(result.message);
-                         $userInfo.show();
-                         $userInfo.find(".username").html(result.userInfo.username);
-                         $loginBox.hide();
+                         //登录之后刷选页面，然后服务器记录cookie信息，显示登录后的信息
+                        window.location.reload()
                     }
                 }
 
@@ -63,6 +69,19 @@ $(function(){
 
     })
 
+//退出的事件
+$logoutBtn.on("click",function(){
+      $.ajax({
+                type:'get',
+                url:'/api/user/loginout',
+                dataType:'json',
+                success:function(result){
+                    if(result.code == 1){
+                        window.location.reload()
+                    }
+                }
+            })
+})
 
 
 

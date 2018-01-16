@@ -105,19 +105,35 @@ router.post('/user/login', function (req, res) {
                   _id:userInfo._id,
                   username:userInfo.username
                };
+
+               //将cookie发送到浏览器，浏览器会把cookie信息保存起来，
+               //每次访问站点的时候，浏览器将保存好的cookie信息，通过头信息
+               //发送到服务端。服务端得到cookie信息，来验证是否是登录状态
+               req.cookies.set('userInfo',JSON.stringify({
+                  _id:userInfo._id,
+                  username:userInfo.username
+               }));
+
                res.json(responseData);//将数据返回到前端
                return;
              }else{
                   responseData.code = 3;
-                  responseData.message='登录失败，请核对后重新登录';
+                  responseData.message='登录失败，请核对后用户名和密码后重新登录';
                   res.json(responseData);
                   return;
              }
          })
-
-
-
  })
+
+
+//处理用户的退出清除 cookie的信息  
+router.get('/user/loginout', function (req, res) {
+     req.cookies.set('userInfo',null);
+     responseData.code=1;
+     responseData.message = '用户已经退出登录';
+     res.json(responseData);
+      return;
+});
 
 
  module.exports = router;

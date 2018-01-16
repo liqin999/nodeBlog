@@ -5,6 +5,8 @@ var express = require("express");
 var swig = require("swig");
 var app = express();
 
+var Cookie = require('cookies');
+
 /*加载数据库模块*/
 var mongoose = require('mongoose');
 
@@ -16,6 +18,20 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //bodyParser设置
 app.use(urlencodedParser)
+
+//设置cookie  当任何页面进入都会走这个中间件
+app.use(function(req,res,next){
+	req.cookies = new Cookie(req,res,next);
+	//解析用户的cookie信息 然后使用模板解析让用户刷新的时候显示登陆的状态
+	req.userInfo = {};// 将得到的cookie信息，绑定到请求的对象上
+	if(req.cookies.get('userInfo')){
+		try{
+			req.userInfo = JSON.parse(req.cookies.get('userInfo'))
+		}catch(e){}
+	}
+	next();
+})
+
 
 
 //设置静态文件托管
