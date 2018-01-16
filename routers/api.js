@@ -22,13 +22,13 @@ router.use(function(req,res,next){// 不管是按照什么样的形式进来的�
 	next();//程序执行下一步
 })
 
+//处理用户的注册 
 router.post('/user/register', function (req, res,next) {
    // 输出 JSON 格式
    var username = req.body.username,
        password = req.body.password,
        repassword = req.body.repassword;
    
-
    //用户名是否为空
    if(username == ''){
 		responseData.code = 1;
@@ -77,11 +77,47 @@ router.post('/user/register', function (req, res,next) {
    	    // console.log(newUserInfo)\
 		responseData.message='注册成功';
 	    res.json(responseData);
-   })
+   });
+});
+
+
+  //处理用户的登录信息  http://localhost:8089/api/user/login
+router.post('/user/login', function (req, res) {
+       var username = req.body.username;
+       var password = req.body.password;
+       if(username == "" || password ==""){
+            responseData.code = 1;
+            responseData.message='用户名或者密码不能为空';
+            res.json(responseData);
+            return;
+       }
+
+      //从数据库查找是否是已经注册过了
+        User.findOne({//操作数据库
+         username:username,
+         password:password
+         }).then(function(userInfo){
+            if(userInfo){//说明已经匹配数据库中的用户名
+               console.log(userInfo)
+               responseData.code = 2;
+               responseData.message='登录成功';
+               responseData.userInfo={
+                  _id:userInfo._id,
+                  username:userInfo.username
+               };
+               res.json(responseData);//将数据返回到前端
+               return;
+             }else{
+                  responseData.code = 3;
+                  responseData.message='登录失败，请核对后重新登录';
+                  res.json(responseData);
+                  return;
+             }
+         })
 
 
 
+ })
 
-})
 
  module.exports = router;

@@ -1,7 +1,8 @@
 $(function(){
 	//前段仍然是使用jquery的方式
 	var $loginBox = $("#loginBox");
-	var $registerBox = $("#registerBox");
+    var $registerBox = $("#registerBox");
+	var $userInfo = $("#userInfo");
 	//切换到注册页面
 	$loginBox.find('a.colMint').on("click",function(){
 		$registerBox.show();
@@ -36,6 +37,32 @@ $(function(){
 
     	})
     })
+
+    //处理用户的登录
+    $loginBox.find('.loginBtn').on("click",function(){
+            $.ajax({
+                type:'post',
+                url:'/api/user/login',
+                dataType:'json',
+                data:{
+                    username: $loginBox.find("[name='username']").val(),
+                    password: $loginBox.find("[name='password']").val()
+                },
+                success:function(result){
+                    console.log(result);
+                    if(result.code == 2){
+                         alert(result.message);
+                         $userInfo.show();
+                         $userInfo.find(".username").html(result.userInfo.username);
+                         $loginBox.hide();
+                    }
+                }
+
+        })
+
+
+    })
+
 
 
 

@@ -6,3 +6,4 @@
 # 例如：  E:\Mongdb\bin>mongod --dbpath=F:\nodeBlog\db --port=27018
 # 下一步使用可视化的工具进行链接
 # 程序中监听链接   mongoose.connect('mongodb://localhost:27018/blog',function(err){})
+# 浏览器地址：localhost:8089
