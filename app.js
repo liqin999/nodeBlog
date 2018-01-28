@@ -16,6 +16,8 @@ var bodyParser = require('body-parser');
 // 创建 application/x-www-form-urlencoded 编码解析usersSchema
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+var User = require('./models/User')
+
 //bodyParser设置
 app.use(urlencodedParser)
 
@@ -24,12 +26,22 @@ app.use(function(req,res,next){
 	req.cookies = new Cookie(req,res,next);
 	//解析用户的cookie信息 然后使用模板解析让用户刷新的时候显示登陆的状态
 	req.userInfo = {};// 将得到的cookie信息，绑定到请求的对象上
-	if(req.cookies.get('userInfo')){
+	if(req.cookies.get('userInfo')){ 
 		try{
-			req.userInfo = JSON.parse(req.cookies.get('userInfo'))
-		}catch(e){}
+			req.userInfo = JSON.parse(req.cookies.get('userInfo'));
+
+			//获取当前用户是否是管理员
+			User.findById(req.userInfo._id).then(function(userInfo){
+				req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
+				next();
+			})
+		}catch(e){
+            next();
+		}
+	}else{
+		next()
 	}
-	next();
+	
 })
 
 

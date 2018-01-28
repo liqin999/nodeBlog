@@ -111,7 +111,14 @@
                <p><span class="colDark">{{userInfo.username}}</span></p>
                
                <p>
-                <span class="colDanger">你好，欢迎光临我的博客 </span>
+                {% if userInfo.isAdmin %}
+                 <span class="colDanger">你好，管理员 </span>             ''
+                 <a href="/admin">进入管理页面</a>
+                {% else %}
+                 <span class="colDanger">你好，欢迎光临我的博客 </span>
+                 {% endif %}
+               
+
                </p>
                
                <p><span class="colDark">
