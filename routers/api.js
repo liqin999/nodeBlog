@@ -58,7 +58,7 @@ router.post('/user/register', function (req, res,next) {
    User.findOne({//操作数据库
    		username:username
    }).then(function(userInfo){
-   	    console.log(userInfo);
+   	 
    		if( userInfo ){
    			//表示数据库存在
    			responseData.code = 4;
@@ -74,7 +74,7 @@ router.post('/user/register', function (req, res,next) {
    		});
    		return user.save();//保存到数据库，成功会走下句then方法
    }).then(function (newUserInfo) {//将插入的新的记录传递到 newUserInfo
-   	    // console.log(newUserInfo)\
+   	   
 		responseData.message='注册成功';
 	    res.json(responseData);
    });
@@ -98,7 +98,7 @@ router.post('/user/login', function (req, res) {
          password:password
          }).then(function(userInfo){
             if(userInfo){//说明已经匹配数据库中的用户名
-               console.log(userInfo)
+              
                responseData.code = 2;
                responseData.message='登录成功';
                responseData.userInfo={
