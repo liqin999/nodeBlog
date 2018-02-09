@@ -2,12 +2,17 @@
 var express = require("express");
 var router = express.Router();
 var User = require("../models/User");
-
+// 统一的返回数据
+var responseData;
 router.use(function(req,res,next){//路由中间件的形式，默认的请求都会走这里
 	if(!req.userInfo.isAdmin){
 		res.send('对不起，只有管理员才能进入这个页面');
 		return;
 	}
+	responseData={
+		code:0,
+		message:''
+	};
 	next();
 });
 
@@ -57,8 +62,16 @@ router.get('/user',function(req,res,next){
 	})
 
 	})
-	
-	
 })
+
+
+//顶部的退出操作 清除当前的cookie
+router.get('/user/loginout',function(req,res){
+	req.cookies.set('userInfo',null);
+	responseData.code = 1;
+	responseData.message = '用户已经退出登陆了';
+	res.json(responseData);//res.json将数据按照json的形式返回到前端页面
+})
+
 
 module.exports = router
