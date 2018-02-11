@@ -173,29 +173,55 @@ router.get('/categery/edit',function(req,res,next){
 router.post('/categery/edit',function(req,res,next){
 	let name = req.body.name || '';
 	let _id = req.query.id;
-	console.log(_id);
-
-	/*Categery.findOne({_id:_id}).*/
-
-	return Categery.findOne({_id:_id}).update({$set:{'name':name}});
-
-	 return;
-	  Categery.findOne({_id:_id}).then(function(id){
-	  	console.log(id)
-	  	 if(id){
-	  	  return Categery.findOne({_id:_id}).update({$set:{'name':name}}).save();
-	  	 	
-	  	 	//db.col.update({'title':'MongoDB 教程'},{$set:{'title':'MongoDB'}})
-	  	 	//db.user.update({'name':'jack'},{$set:{'age':20}})
-	  	 	return new Categery({name:name}).save();
-	  	 }
-	  }).then(function(){
-	  	 res.render("admin/success",{
+	
+	 Categery.findOne({_id:_id}).then(function(categery){
+	 	if(!categery){
+	 		 res.render("admin/error",{
+	 		 	userInfo:req.userInfo,
+				message:'分类信息不存在',
+	 		 })
+	 		 return Promise.reject();
+	 	}else{
+	 		//当用户没有做出修改的时候
+	 		if(name == categery.name){
+	 			 res.render("admin/success",{
+			 		 	userInfo:req.userInfo,
+						message:'修改成功',
+						url:"/admin/categery"
+			 		 })
+	 			 return Promise.reject();
+	 		}else{
+	 			//要修改的分类的名称是否已经在数据库存在了
+	 			return Categery.findOne({
+	 				_id:{$ne:_id},//不等于当前的id
+	 				name:name
+	 			})
+	 		}
+	 	}
+	 }).then(function(someCategery){
+	 	if(someCategery){
+	 		 res.render("admin/error",{
+	 		 	userInfo:req.userInfo,
+				message:'数据库中已经存在同名的分类',
+	 		 })
+	 		 return Promise.reject();
+	 	}else{
+	 		return Categery.update({//第一个参数是修改的条件，第二个参数是修改的值
+	 			_id:_id
+	 		},{
+	 			name:name
+	 		})
+	 	}
+	 }).then(function(){
+	 	res.render("admin/success",{
 				userInfo:req.userInfo,
-				message:'分类的保存成功',
+				message:'修改成功',
 				url:'/admin/categery'
 		 });
-	  })
+	 })
+
+
+	
 
 })
 
