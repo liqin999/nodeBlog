@@ -64,11 +64,9 @@ app.get('/',function(req,res){
 	res.render('index')
 })*/
 
-
 app.use('/admin', require('./routers/admin'));
 app.use('/api', require('./routers/api'));
 app.use('/', require('./routers/main'));
-
 
 //使用mongoose 链接数据库  blog是数据库的名字
 mongoose.connect('mongodb://localhost:27018/blog',function(err){
@@ -78,7 +76,6 @@ mongoose.connect('mongodb://localhost:27018/blog',function(err){
 		console.log('数据库连接成功');
 		//监听http请求 数据库连接成功的时候启动应用
 		app.listen(8089);
-
 	}
 });
 
